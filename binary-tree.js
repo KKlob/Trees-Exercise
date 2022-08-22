@@ -108,7 +108,34 @@ class BinaryTree {
    * which is larger than lowerBound. Return null if no such value exists. */
 
   nextLarger(lowerBound) {
+    let min = Infinity;
 
+    if (!this.root) return null;
+
+    function findNextLarger(node) {
+      let left;
+      node.left ? left = findNextLarger(node.left) : left = null;
+      let right;
+      node.right ? right = findNextLarger(node.right) : right = null;
+
+      if (left && left.val > lowerBound && left.val <= min) {
+        min = left.val
+        return left.val
+      } else if (right && right.val > lowerBound && right.val <= min) {
+        min = right.val
+        return right.val
+      }
+      else if (node.val > lowerBound && node.val <= min) {
+        min = node.val
+        return node.val
+      }
+
+      return null;
+
+    }
+    findNextLarger(this.root);
+    if (min === Infinity) return null;
+    return min;
   }
 
   /** Further study!
