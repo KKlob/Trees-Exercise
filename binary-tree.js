@@ -17,21 +17,91 @@ class BinaryTree {
    * the length of the shortest path from the root to a leaf. */
 
   minDepth() {
+    if (!this.root) return 0;
 
+    let level = 1;
+
+    const queue = [this.root];
+    const childQueue = [this.root.left, this.root.right];
+
+    function findLeaf() {
+      // goes through passed queue and checks for leaf. If found, returns true. else returns false;
+      while (queue.length) {
+        let current = queue.shift();
+        if (!current.left && !current.right) return true;
+      }
+      return false;
+    }
+
+    while (!findLeaf()) {
+      for (let child of childQueue) queue.push(child);
+      level++;
+      for (let node of queue) {
+        if (node.left) childQueue.push(node.left);
+        if (node.right) childQueue.push(node.right);
+      }
+    }
+
+    return level;
   }
 
   /** maxDepth(): return the maximum depth of the tree -- that is,
    * the length of the longest path from the root to a leaf. */
 
   maxDepth() {
+    if (!this.root) return 0;
 
+    let level = 1;
+
+    if (!this.root.left && !this.root.right) return level;
+
+    const queue = [];
+    const childQueue = [];
+    if (this.root.left) childQueue.push(this.root.left);
+    if (this.root.right) childQueue.push(this.root.right);
+
+
+    while (childQueue.length) {
+      while (queue.length) {
+        queue.shift();
+      }
+      while (childQueue.length) {
+        queue.push(childQueue.shift());
+      }
+      level++;
+      for (let node of queue) {
+        if (node.left) childQueue.push(node.left);
+        if (node.right) childQueue.push(node.right);
+      }
+    }
+    return level;
   }
 
   /** maxSum(): return the maximum sum you can obtain by traveling along a path in the tree.
    * The path doesn't need to start at the root, but you can't visit a node more than once. */
 
   maxSum() {
+    let max = 0;
 
+    if (!this.root) return 0;
+
+    function findMaxSum(node) {
+      let left;
+      node.left ? left = findMaxSum(node.left) : left = 0;
+      let right;
+      node.right ? right = findMaxSum(node.right) : right = 0;
+      let leftAndVal = left + node.val;
+      let rightAndVal = right + node.val;
+      let all = left + right + node.val;
+
+      let currentMax = Math.max(leftAndVal, rightAndVal, all, node.val);
+
+      max = Math.max(currentMax, max);
+      return Math.max(node.val, leftAndVal, rightAndVal);
+    }
+
+    findMaxSum(this.root);
+    return max;
   }
 
   /** nextLarger(lowerBound): return the smallest value in the tree
@@ -68,7 +138,7 @@ class BinaryTree {
    * of two nodes in a binary tree. */
 
   lowestCommonAncestor(node1, node2) {
-    
+
   }
 }
 
